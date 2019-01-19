@@ -38,6 +38,16 @@ namespace Tanks
 
             }
 
+            //debugs
+            Tank tank = new Tank();
+            int x = tank.X;
+            int y = tank.Y;
+            tank.Run(Direction.Right);
+            x = tank.X;
+            y = tank.Y;
+
+            //tank.X = 5;
+
             Application.Run(pc);
         }
     }
