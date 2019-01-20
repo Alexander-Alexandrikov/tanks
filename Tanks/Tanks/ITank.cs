@@ -14,7 +14,6 @@ namespace Tanks
         int Y { get; }
         Direction TankDirection { get; }
 
-        void Run();
-        void Run(Direction direction);
+        void Run();        
     }
 }

@@ -19,9 +19,9 @@ namespace Tanks
         public Kolobok()
         {
             TankDirection = Direction.Up;
-            X = 0;
-            Y = 0;
-            TankImage = kolobokView.Img;
+            X = 110;
+            Y = 200;
+            TankImage = kolobokView.ImgUp;
         }
 
         public void Run()
@@ -41,15 +41,19 @@ namespace Tanks
             {
                 case Direction.Left:
                     X--;
+                    TankImage = kolobokView.ImgLeft;
                     break;
                 case Direction.Right:
                     X++;
+                    TankImage = kolobokView.ImgRight;
                     break;
                 case Direction.Up:
                     Y--;
+                    TankImage = kolobokView.ImgUp;
                     break;
                 case Direction.Down:
                     Y++;
+                    TankImage = kolobokView.ImgDown;
                     break;
             }
         }

@@ -10,11 +10,19 @@ namespace Tanks
     public class Wall
     {
         WallView wallView = new WallView();
-        Image img;
+        public Image Image { get; }
+        public int XLeft { get; }
+        public int XRight { get; }
+        public int YUp { get; }
+        public int YDown { get; }
 
-        public Wall()
+        public Wall(int xLeft, int xRight, int yUp, int yDown)
         {
-            //img = wallView.Img;
+            Image = wallView.Img;
+            XLeft = xLeft;
+            XRight = xRight;
+            YUp = yUp;
+            YDown = yDown;
         }
 
     }

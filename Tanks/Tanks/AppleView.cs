@@ -9,6 +9,6 @@ namespace Tanks
 {
     public class AppleView : IEntitiesView
     {
-        public Image Img { get; } = Properties.Resources.WallImage;
+        public Image Img { get; } = Properties.Resources.apple;
     }
 }

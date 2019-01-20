@@ -133,4 +133,25 @@
   <data name="WallImage" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\WallImage.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="EnemyTankDown" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\EnemyTankDown.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="EnemyTankLeft" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\EnemyTankLeft.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="EnemyTankRight" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\EnemyTankRight.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="KolobokDown" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\KolobokDown.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="KolobokLeft" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\KolobokLeft.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="KolobokRight" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\KolobokRight.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="KolobokNew" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\KolobokNew.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

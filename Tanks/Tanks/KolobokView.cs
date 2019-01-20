@@ -7,8 +7,11 @@ using System.Threading.Tasks;
 
 namespace Tanks
 {
-    public class KolobokView : IEntitiesView
+    public class KolobokView 
     {
-        public Image Img { get; } = Properties.Resources.Kolobok;
+        public Image ImgUp { get; } = Properties.Resources.KolobokNew;
+        public Image ImgRight { get; } = Properties.Resources.KolobokNew;
+        public Image ImgLeft { get; } = Properties.Resources.KolobokNew;
+        public Image ImgDown { get; } = Properties.Resources.KolobokNew;
     }
 }

@@ -16,26 +16,15 @@ namespace Tanks
 
         public Image TankImage { get; private set; }
 
-        public Tank()
+        public Tank(int x, int y)
         {
             TankDirection = Direction.Up;
-            X = 0;
-            Y = 0;
-            TankImage = tankView.Img;
+            X = x;
+            Y = y;
+            TankImage = tankView.ImgUp;
         }
 
         public void Run()
-        {
-            MoveToDirection();            
-        }
-
-        public void Run(Direction direction)
-        {
-            TankDirection = direction;
-            MoveToDirection();
-        }
-
-        private void MoveToDirection()
         {
             switch (TankDirection)
             {
@@ -50,6 +39,58 @@ namespace Tanks
                     break;
                 case Direction.Down:
                     Y++;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void Turn(Direction direction)
+        {
+            TankDirection = direction;
+            PutImage();
+        }
+
+
+        public void TurnAround()
+        {
+            switch (TankDirection)
+            {
+                case Direction.Left:
+                    TankDirection = Direction.Right;
+                    break;
+                case Direction.Right:
+                    TankDirection = Direction.Left; 
+                    break;
+                case Direction.Up:
+                    TankDirection = Direction.Down; 
+                    break;
+                case Direction.Down:
+                    TankDirection = Direction.Up; 
+                    break;
+                default:
+                    break;
+            }
+
+        }
+
+        private void PutImage()
+        {
+            switch (TankDirection)
+            {
+                case Direction.Left:
+                    TankImage = tankView.ImgLeft;
+                    break;
+                case Direction.Right:
+                    TankImage = tankView.ImgRight;
+                    break;
+                case Direction.Up:
+                    TankImage = tankView.ImgUp;
+                    break;
+                case Direction.Down:
+                    TankImage = tankView.ImgDown;
+                    break;
+                default:
                     break;
             }
         }

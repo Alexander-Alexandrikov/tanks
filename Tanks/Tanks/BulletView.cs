@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Tanks
 {
-    public class BulletView : IEntitiesView
+    public class BulletView 
     {
         public Image Img { get; } = Properties.Resources.bullet;
     }
