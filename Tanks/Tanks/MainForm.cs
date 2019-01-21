@@ -15,8 +15,11 @@ namespace Tanks
         Model model;
         PackmanController packmanController;
 
+        int timerCounter = 0; //счётчик для таймера
+        System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
 
         private Image MyImage;
+        private int _objectsSpeed;
 
         public MainForm() : this(250) { }
         public MainForm(int fieldWidth) : this(fieldWidth, 250) { }
@@ -29,69 +32,22 @@ namespace Tanks
             model = new Model(fieldWidth, fieldHeight, tanksAmount, applesAmount, objectsSpeed);
             pictureBox1.Size = new Size(fieldWidth, fieldHeight);
             packmanController = new PackmanController(model);
+            _objectsSpeed = objectsSpeed;
         }
+
+        
 
         private void NewGameBtn_Click(object sender, EventArgs e)
         {
-            //model.NewGame();
-            while (true)
-            {
-                //pictureBox1.;
-                ShowMyImage(model.kolobok.TankImage, model.kolobok.X, model.kolobok.Y);
-                DrawAllWalls();
-                packmanController.NewGame(e);
-                DrawAllApples();
-                DrawAllTanks();
+            timer.Interval = _objectsSpeed;
+            timer.Tick += new EventHandler(Timer_Tick); 
+            timer.Start();
 
-
-                System.Threading.Thread.Sleep(100/model._objectsSpeed);
-                pictureBox1.Invalidate();
-            }
-
-
-            //Graphics g = pictureBox1.CreateGraphics();
-            //g.DrawImage(model.tank.TankImage, new Point(model.tank.X, model.tank.Y));
-
-            //вывод изображения из примера
-            //pictureBox1.Size = new Size(210, 110);
-            //this.Controls.Add(pictureBox1);
-
-            //Bitmap flag = new Bitmap(200, 100);
-            //Graphics flagGraphics = Graphics.FromImage(flag);
-            //int red = 0;
-            //int white = 11;
-            //while (white <= 100)
-            //{
-            //    flagGraphics.FillRectangle(Brushes.Red, 0, red, 200, 10);
-            //    flagGraphics.FillRectangle(Brushes.White, 0, white, 200, 10);
-            //    red += 20;
-            //    white += 20;
-            //}
-            //pictureBox1.Image = flag;
-            // конец вывода из примера
-            //
-
-
-
-            //packmanController.DrawImagePointF(e, )
-
-
+            packmanController.NewGame();
         }
 
         private void ShowMyImage(Image image, int xSize, int ySize)
         {
-            // Sets up an image object to be displayed.
-            //if (MyImage != null)
-            //{
-            //    MyImage.Dispose();
-            //}
-
-            // Stretches the image to fit the pictureBox.
-            //pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-            //MyImage = image;
-            //pictureBox1.ClientSize = new Size(xSize, ySize);
-            //pictureBox1.Image = MyImage;
-
             Graphics g = pictureBox1.CreateGraphics();
             g.DrawImage(image, new Point(xSize, ySize));
         }
@@ -139,5 +95,59 @@ namespace Tanks
                 g.DrawImage(t.TankImage, new Point(t.X, t.Y));
             }
         }
+
+        private void DrawAllProjectiles()
+        {
+            foreach (var element in model.Projectiles)
+            {
+                Graphics g = pictureBox1.CreateGraphics();
+                g.DrawImage(element.ProjectileImage, new Point(element.X + 10, element.Y + 10));
+            }
+        }
+
+        private void NewGameBtn_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            packmanController.ChangeDirection(e); 
+        }
+
+        private void ShowReport_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            packmanController.ChangeDirection(e);
+        }
+
+        private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        {
+            ShowMyImage(model.kolobok.TankImage, model.kolobok.X, model.kolobok.Y);
+            DrawAllWalls();
+            DrawAllApples();
+            DrawAllTanks();
+            DrawAllProjectiles();
+            //Invalidate();
+        }
+
+        private void PaintAll()
+        {
+            ShowMyImage(model.kolobok.TankImage, model.kolobok.X, model.kolobok.Y);
+            DrawAllWalls();
+            DrawAllApples();
+            DrawAllTanks();
+            DrawAllProjectiles();
+            //Invalidate();
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            PaintAll();
+            pictureBox1.Refresh();
+        }
+
+        private void ShowReport_Click(object sender, EventArgs e)
+        {
+            ReportForm reportForm = new ReportForm(model);
+            reportForm.Hide();
+            reportForm.Show();
+        }
+
+        
     }
 }

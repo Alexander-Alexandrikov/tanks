@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace Tanks
 {
-    public class Tank : ITank
+    public class Tank : ITank, IGameObject, IRun
     {
         TankView tankView = new TankView();
         public int X { get; private set; }
@@ -58,19 +58,29 @@ namespace Tanks
             {
                 case Direction.Left:
                     TankDirection = Direction.Right;
+                    PutImage();
                     break;
                 case Direction.Right:
-                    TankDirection = Direction.Left; 
+                    TankDirection = Direction.Left;
+                    PutImage();
                     break;
                 case Direction.Up:
-                    TankDirection = Direction.Down; 
+                    TankDirection = Direction.Down;
+                    PutImage();
                     break;
                 case Direction.Down:
-                    TankDirection = Direction.Up; 
+                    TankDirection = Direction.Up;
+                    PutImage();
                     break;
                 default:
                     break;
             }
+
+        }
+
+        //стрелять
+        public void Shoot()
+        {
 
         }
 

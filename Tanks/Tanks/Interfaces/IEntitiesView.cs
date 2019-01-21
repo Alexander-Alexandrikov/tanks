@@ -9,6 +9,6 @@ namespace Tanks
 {
     public interface IEntitiesView
     {
-        Image Img{ get; }
+        Image Img { get; }
     }
 }

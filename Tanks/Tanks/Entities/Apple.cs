@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Tanks
 {
-    public class Apple
+    public class Apple : IGameObject
     {
         AppleView appleView = new AppleView();
         public int X { get; }

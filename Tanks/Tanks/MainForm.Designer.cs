@@ -31,18 +31,20 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.NewGameBtn = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.ShowReport = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // NewGameBtn
             // 
-            this.NewGameBtn.Location = new System.Drawing.Point(297, 404);
+            this.NewGameBtn.Location = new System.Drawing.Point(12, 404);
             this.NewGameBtn.Name = "NewGameBtn";
             this.NewGameBtn.Size = new System.Drawing.Size(227, 34);
             this.NewGameBtn.TabIndex = 0;
             this.NewGameBtn.Text = "New Game";
             this.NewGameBtn.UseVisualStyleBackColor = true;
             this.NewGameBtn.Click += new System.EventHandler(this.NewGameBtn_Click);
+            this.NewGameBtn.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NewGameBtn_KeyPress);
             // 
             // pictureBox1
             // 
@@ -52,6 +54,18 @@
             this.pictureBox1.Size = new System.Drawing.Size(66, 64);
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
+            // 
+            // ShowReport
+            // 
+            this.ShowReport.Location = new System.Drawing.Point(526, 404);
+            this.ShowReport.Name = "ShowReport";
+            this.ShowReport.Size = new System.Drawing.Size(212, 34);
+            this.ShowReport.TabIndex = 2;
+            this.ShowReport.Text = "Show Report";
+            this.ShowReport.UseVisualStyleBackColor = true;
+            this.ShowReport.Click += new System.EventHandler(this.ShowReport_Click);
+            this.ShowReport.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ShowReport_KeyPress);
             // 
             // MainForm
             // 
@@ -59,6 +73,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.ShowReport);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.NewGameBtn);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -73,6 +88,7 @@
 
         private System.Windows.Forms.Button NewGameBtn;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Button ShowReport;
     }
 }
 

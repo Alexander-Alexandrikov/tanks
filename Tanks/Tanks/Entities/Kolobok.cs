@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Tanks
 {
-    public class Kolobok : ITank
+    public class Kolobok : ITank, IGameObject, IRun
     {
         KolobokView kolobokView = new KolobokView();
         
@@ -22,6 +22,11 @@ namespace Tanks
             X = 110;
             Y = 200;
             TankImage = kolobokView.ImgUp;
+        }
+
+        public void SetDirection(Direction newDirection)
+        {
+            TankDirection = newDirection;
         }
 
         public void Run()
@@ -57,5 +62,27 @@ namespace Tanks
                     break;
             }
         }
+
+        public void TurnAround()
+        {
+            switch (TankDirection)
+            {
+                case Direction.Left:
+                    TankDirection = Direction.Right;
+                    break;
+                case Direction.Right:
+                    TankDirection = Direction.Left;
+                    break;
+                case Direction.Up:
+                    TankDirection = Direction.Down;
+                    break;
+                case Direction.Down:
+                    TankDirection = Direction.Up;
+                    break;
+                default:
+                    break;
+            }
+        }
+
     }
 }
