@@ -9,7 +9,7 @@ namespace Tanks
 {
     public class Tank : ITank, IGameObject, IRun
     {
-        TankView tankView = new TankView();
+        private TankView tankView = new TankView();
         public int X { get; private set; }
         public int Y { get; private set; }
         public Direction TankDirection { get; private set; }
@@ -75,12 +75,6 @@ namespace Tanks
                 default:
                     break;
             }
-
-        }
-
-        //стрелять
-        public void Shoot()
-        {
 
         }
 

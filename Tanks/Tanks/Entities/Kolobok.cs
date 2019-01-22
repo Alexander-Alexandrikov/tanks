@@ -24,6 +24,14 @@ namespace Tanks
             TankImage = kolobokView.ImgUp;
         }
 
+        public void SetBeginValue()
+        {
+            TankDirection = Direction.Up;
+            X = 110;
+            Y = 200;
+            TankImage = kolobokView.ImgUp;
+        }
+
         public void SetDirection(Direction newDirection)
         {
             TankDirection = newDirection;

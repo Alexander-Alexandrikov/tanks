@@ -11,85 +11,73 @@ namespace Tanks
     public class PackmanController
     {
         private Model model;
-        private int _fieldWidth;
-        private int _fieldHeight;
-        private int _tanksAmount;
-        private int _applesAmount;
-        private int _objectsSpeed;
+        private System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+        private int keyChangeStatus;
 
         public PackmanController(Model viewModel)
         {
             model = viewModel;
+            timer.Interval = model.ObjectsSpeed;
+            timer.Tick += new EventHandler(Timer_Tick);
+            keyChangeStatus = 0;
         }
 
         public void NewGame()
         {
-            //model = new Model();
+            model.StartTimer();
+            timer.Start();
             model.NewGame();
-            //model.Dispose();
-            //model = null;
         }
+
+        public void GameOver()
+        {
+            model.GameOver();
+        }       
 
         public void ChangeDirection(KeyPressEventArgs e)
         {
-            switch(e.KeyChar)
+            if(keyChangeStatus > 1)
             {
-                case 'a':
-                    model.kolobok.SetDirection(Direction.Left);
-                    break;
-                case 'd':
-                    model.kolobok.SetDirection(Direction.Right);
-                    break;
-                case 'w':
-                    model.kolobok.SetDirection(Direction.Up);
-                    break;
-                case 's':
-                    model.kolobok.SetDirection(Direction.Down);
-                    break;
+                switch (e.KeyChar)
+                {
+                    case 'a':
+                    case 'A':
+                    case 'ф':
+                    case 'Ф':
+                        model.kolobok.SetDirection(Direction.Left);
+                        break;
+                    case 'd':
+                    case 'D':
+                    case 'в':
+                    case 'В':
+                        model.kolobok.SetDirection(Direction.Right);
+                        break;
+                    case 'w':
+                    case 'W':
+                    case 'ц':
+                    case 'Ц':
+                        model.kolobok.SetDirection(Direction.Up);
+                        break;
+                    case 's':
+                    case 'S':
+                    case 'ы':
+                    case 'Ы':
+                        model.kolobok.SetDirection(Direction.Down);
+                        break;
+                    case 'l':
+                    case 'L':
+                    case 'д':
+                    case 'Д':
+                        model.Shoot();
+                        break;
+                }
+                keyChangeStatus = 0;
+            }           
+        }
 
-                case 'A':
-                    model.kolobok.SetDirection(Direction.Left);
-                    break;
-                case 'D':
-                    model.kolobok.SetDirection(Direction.Right);
-                    break;
-                case 'W':
-                    model.kolobok.SetDirection(Direction.Up);
-                    break;
-                case 'S':
-                    model.kolobok.SetDirection(Direction.Down);
-                    break;
-
-                case 'ф':
-                    model.kolobok.SetDirection(Direction.Left);
-                    break;
-                case 'в':
-                    model.kolobok.SetDirection(Direction.Right);
-                    break;
-                case 'ц':
-                    model.kolobok.SetDirection(Direction.Up);
-                    break;
-                case 'ы':
-                    model.kolobok.SetDirection(Direction.Down);
-                    break;
-
-                case 'Ф':
-                    model.kolobok.SetDirection(Direction.Left);
-                    break;
-                case 'В':
-                    model.kolobok.SetDirection(Direction.Right);
-                    break;
-                case 'Ц':
-                    model.kolobok.SetDirection(Direction.Up);
-                    break;
-                case 'Ы':
-                    model.kolobok.SetDirection(Direction.Down);
-                    break;
-                case ' ':
-                    model.Shoot();
-                    break;
-            }
-
+        public void Timer_Tick(object sender, EventArgs e)
+        {
+            keyChangeStatus++;
         }
     }
 }

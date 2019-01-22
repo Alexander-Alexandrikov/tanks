@@ -7,14 +7,17 @@ using System.Threading.Tasks;
 
 namespace Tanks
 {
-    public class Projectile : IGameObject, IRun
+    public class PackmanProjectile
     {
+        ProjectileView projectileView = new ProjectileView();
+        public Image ProjectileImage { get; }
         public int X { get; private set; }
         public int Y { get; private set; }
         public Direction _direction;
 
-        public Projectile(int x, int y, Direction direction)
+        public PackmanProjectile(int x, int y, Direction direction)
         {
+            ProjectileImage = projectileView.ProjectileImg;
             _direction = direction;
             switch (_direction)
             {
@@ -24,7 +27,7 @@ namespace Tanks
                     break;
                 case Direction.Right:
                     X = x + 20;
-                    Y = y + 10;                   
+                    Y = y + 10;
                     break;
                 case Direction.Up:
                     X = x + 10;

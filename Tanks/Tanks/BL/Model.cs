@@ -15,19 +15,17 @@ namespace Tanks
         private int _tanksAmount;
         private int _applesAmount;
         private int _objectsSpeed;
-        private List<Apple> apples;
-        private List<Wall> walls;
-        private List<Tank> tanks;
-        private List<Projectile> projectiles;
         private Random random;
+        public bool GameStatus { get; private set; } = true;
         public List<Wall> Walls { get; private set; }
         public List<Apple> Apples { get; private set; }
         public List<Tank> Tanks { get; private set; }
         public List<Projectile> Projectiles { get; private set; }
+        public List<PackmanProjectile> PackmanProjectiles { get; private set; }
         public Kolobok kolobok { get; private set; }
         public int GameCount { get; private set; }
-        public WallView wallView { get; private set; }
-        System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+        public int ObjectsSpeed { get; private set; }
+        private System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
         
         public Model(int fieldWidth, int fieldHeight, int tanksAmount, int applesAmount, int objectsSpeed)
         {
@@ -49,33 +47,61 @@ namespace Tanks
                 _fieldHeight = 250;
             }
 
-            _tanksAmount = tanksAmount;
-            _applesAmount = applesAmount;
+            if ((tanksAmount >= 10) && (tanksAmount <= 1))
+            {
+                _tanksAmount = tanksAmount;
+            }
+            else
+            {
+                _tanksAmount = 5;
+            }
+
+            if ((applesAmount >= 10) && (applesAmount <= 1))
+            {
+                _applesAmount = applesAmount;
+            }
+            else
+            {
+                _applesAmount = 5;
+            }
+
+            if ((objectsSpeed >= 10) && (objectsSpeed <= 1))
+            {
+                ObjectsSpeed = objectsSpeed;
+            }
+            else
+            {
+                ObjectsSpeed = 10;
+            }
             _objectsSpeed = objectsSpeed;
             kolobok = new Kolobok();
-            wallView = new WallView();
-            apples = new List<Apple>();
-            tanks = new List<Tank>();
-            walls = new List<Wall>();
-            projectiles = new List<Projectile>();
             random = new Random();
-            Walls = walls;
-            Apples = apples;
-            Tanks = tanks;
-            Projectiles = projectiles;
+            Walls = new List<Wall>();
+            Apples = new List<Apple>(); 
+            Tanks = new List<Tank>();
+            Projectiles = new List<Projectile>();
 
+
+            PackmanProjectiles = new List<PackmanProjectile>();
             CreateWalls();
             CreateApples();
             CreateTanks();
 
             timer.Interval = _objectsSpeed;
-            timer.Tick += new EventHandler(timer_Tick); //подписываемся на события Tick
+            timer.Tick += new EventHandler(timer_Tick);
             
 
         }
 
+        public void StartTimer()
+        {
+            timer.Tick += new EventHandler(timer_Tick);
+            timer.Start();
+        }
+
         public void NewGame()
         {
+            GameStatus = true;
             timer.Start();
             kolobok.Run();
 
@@ -83,62 +109,66 @@ namespace Tanks
             Direction tankDir = (Direction)values.GetValue(random.Next(values.Length));
 
             //выстрелы танков
-            foreach (var t in tanks)
+            foreach (var t in Tanks)
             {
                 if (random.Next(100) < 1)
                 {
                     switch (kolobok.TankDirection)
                     {
                         case Direction.Left:
-                            projectiles.Add(new Projectile(t.X - 22, t.Y - 5, t.TankDirection));
+                            Projectiles.Add(new Projectile(t.X - 22, t.Y - 5, t.TankDirection));
                             break;
                         case Direction.Right:
-                            projectiles.Add(new Projectile(t.X + 12, t.Y - 5, t.TankDirection));
+                            Projectiles.Add(new Projectile(t.X + 12, t.Y - 5, t.TankDirection));
                             break;
                         case Direction.Up:
-                            projectiles.Add(new Projectile(t.X - 5, t.Y - 22, t.TankDirection));
+                            Projectiles.Add(new Projectile(t.X - 5, t.Y - 22, t.TankDirection));
                             break;
                         case Direction.Down:
-                            projectiles.Add(new Projectile(t.X - 5, t.Y + 12, t.TankDirection));
+                            Projectiles.Add(new Projectile(t.X - 5, t.Y + 12, t.TankDirection));
                             break;
                     }
                 }
             }
 
             //полёт снарядов
-            foreach (var p in projectiles)
+            foreach (var p in Projectiles)
             {
                 p.Run();
             }
-                
-            //расчёт нового направления танка
-            foreach (var a in walls)
+            foreach (var p in PackmanProjectiles)
             {
-                for (int i = 0; i < tanks.Count; i++)
+                p.Run();
+            }
+
+            //расчёт нового направления танка
+            foreach (var a in Walls)
+            {
+                for (int i = 0; i < Tanks.Count; i++)
                 {
                     bool wallFlag = false;
                     switch (tankDir)
                     {
                         case Direction.Left:
-                            if (Collide.BoxCollides(tanks[i].X - 1, tanks[i].Y, 20, 20, a.XLeft, a.YUp, a.XRight - a.XLeft, a.YDown - a.YUp))
+                            if (Collide.BoxCollides(Tanks[i].X - 1, Tanks[i].Y, 20, 20, a.XLeft, a.YUp, a.XRight - a.XLeft, a.YDown - a.YUp))
                             {
                                 wallFlag = true;
                             }
                             break;
                         case Direction.Right:
-                            if (Collide.BoxCollides(tanks[i].X + 1, tanks[i].Y, 20, 20, a.XLeft, a.YUp, a.XRight - a.XLeft, a.YDown - a.YUp))
+                            if (Collide.BoxCollides(Tanks[i].X + 1, Tanks[i].Y, 20, 20, a.XLeft, a.YUp, a.XRight - a.XLeft, a.YDown - a.YUp))
                             {
                                 wallFlag = true;
                             }
                             break;
                         case Direction.Up:
-                            if (Collide.BoxCollides(tanks[i].X, tanks[i].Y - 1, 20, 20, a.XLeft, a.YUp, a.XRight - a.XLeft, a.YDown - a.YUp))
+                            if (Collide.BoxCollides(Tanks[i].X, Tanks[i].Y - 1, 20, 20, a.XLeft, a.YUp, a.XRight - a.XLeft, a.YDown - a.YUp))
                             {
                                 wallFlag = true;
                             }
                             break;
                         case Direction.Down:
-                            if (Collide.BoxCollides(tanks[i].X, tanks[i].Y + 1, 20, 20, a.XLeft, a.YUp, a.XRight - a.XLeft, a.YDown - a.YUp))
+                            if (Collide.BoxCollides(Tanks[i].X, Tanks[i].Y + 1, 20, 20, a.XLeft, a.YUp, a.XRight - a.XLeft, a.YDown - a.YUp))
                             {
                                 wallFlag = true;
                             }
@@ -146,17 +176,17 @@ namespace Tanks
                     }
                     if (random.Next(100) < 1)
                     {
-                        tanks[i].Turn(tankDir);
+                        Tanks[i].Turn(tankDir);
                     }
                     if (wallFlag)
                     {
-                        tanks[i].TurnAround();
+                        Tanks[i].TurnAround();
                     }
                 }
             }
                 
             //проверка на разворот перед границей танка
-            foreach (var element in tanks)
+            foreach (var element in Tanks)
             {
                 switch (element.TankDirection)
                 {
@@ -180,65 +210,63 @@ namespace Tanks
             }
 
             //столкновение танков
-            for (int i = 0; i < tanks.Count - 1; i++)
-                for (int j = 1; j < tanks.Count; j++)
+            for (int i = 0; i < Tanks.Count - 1; i++)
+                for (int j = 1; j < Tanks.Count; j++)
                 {
-                    switch (tanks[i].TankDirection)
+                    switch (Tanks[i].TankDirection)
                     {
                         case Direction.Left:
-                            if (Collide.BoxCollides(tanks[i].X - 1, tanks[i].Y, 20, 20, tanks[j].X, tanks[j].Y, 20, 20))
+                            if (Collide.BoxCollides(Tanks[i].X - 1, Tanks[i].Y, 20, 20, Tanks[j].X, Tanks[j].Y, 20, 20))
                             {
-                                tanks[i].TurnAround();
-                                tanks[j].TurnAround();
+                                Tanks[i].TurnAround();
+                                Tanks[j].TurnAround();
                             }
                             break;
                         case Direction.Right:
-                            if (Collide.BoxCollides(tanks[i].X + 1, tanks[i].Y, 20, 20, tanks[j].X, tanks[j].Y, 20, 20))
+                            if (Collide.BoxCollides(Tanks[i].X + 1, Tanks[i].Y, 20, 20, Tanks[j].X, Tanks[j].Y, 20, 20))
                             {
-                                tanks[i].TurnAround();
-                                tanks[j].TurnAround();
+                                Tanks[i].TurnAround();
+                                Tanks[j].TurnAround();
                             }
                             break;
                         case Direction.Up:
-                            if (Collide.BoxCollides(tanks[i].X, tanks[i].Y - 1, 20, 20, tanks[j].X, tanks[j].Y, 20, 20))
+                            if (Collide.BoxCollides(Tanks[i].X, Tanks[i].Y - 1, 20, 20, Tanks[j].X, Tanks[j].Y, 20, 20))
                             {
-                                tanks[i].TurnAround();
-                                tanks[j].TurnAround();
+                                Tanks[i].TurnAround();
+                                Tanks[j].TurnAround();
                             }
                             break;
                         case Direction.Down:
-                            if (Collide.BoxCollides(tanks[i].X, tanks[i].Y + 1, 20, 20, tanks[j].X, tanks[j].Y, 20, 20))
+                            if (Collide.BoxCollides(Tanks[i].X, Tanks[i].Y + 1, 20, 20, Tanks[j].X, Tanks[j].Y, 20, 20))
                             {
-                                tanks[i].TurnAround();
-                                tanks[j].TurnAround();
+                                Tanks[i].TurnAround();
+                                Tanks[j].TurnAround();
                             }
                             break;
                     }
                 }
 
             //столкновение танков с пулей
-            foreach (var a in Projectiles)
+            foreach (var a in PackmanProjectiles)
             {
-                for (int i = 0; i < tanks.Count; i++)
+                for (int i = 0; i < Tanks.Count; i++)
                 {
-                    if (Collide.BoxCollides(tanks[i].X, tanks[i].Y, 20, 20, a.X, a.Y, 10, 10))
+                    if (Collide.BoxCollides(Tanks[i].X, Tanks[i].Y, 20, 20, a.X, a.Y, 10, 10))
                     {
-                        tanks.Remove(tanks[i]);
+                        Tanks.Remove(Tanks[i]);
                         CreateTanks();
                         break;
                     }
-                    //Projectiles.Remove(Projectiles[i]);
-                    //break;
                 }
                 
             }
 
             //подбор яблок
-            foreach (var a in apples)
+            foreach (var a in Apples)
             {
                 if (Collide.BoxCollides(kolobok.X, kolobok.Y, 20, 20, a.X, a.Y, 15, 15))
                 {
-                    apples.Remove(a);
+                    Apples.Remove(a);
                     GameCount++;
                     CreateApples();
                     break;
@@ -267,7 +295,7 @@ namespace Tanks
             }
 
             //столкновение пакмена со стеной
-            foreach (var a in walls)
+            foreach (var a in Walls)
             {
                 bool wallFlag = false;
                 switch (kolobok.TankDirection)
@@ -303,6 +331,23 @@ namespace Tanks
                 }
             }
 
+            // столкновение пакмена с пулей или танком
+            foreach (var a in Projectiles)
+            {
+                if (Collide.BoxCollides(kolobok.X, kolobok.Y, 20, 20, a.X, a.Y, 10, 10))
+                {
+                    GameOver();
+                }
+            }
+
+            foreach (var a in Tanks)
+            {
+                if (Collide.BoxCollides(kolobok.X, kolobok.Y, 20, 20, a.X, a.Y, 20, 20))
+                {
+                    GameOver();
+                }
+            }
+
             //столкновение снаряда с границей
             foreach (var t in Projectiles)
             {
@@ -328,8 +373,55 @@ namespace Tanks
                 break;
             }
 
+            foreach (var t in PackmanProjectiles)
+            {
+                switch (t._direction)
+                {
+                    case Direction.Left:
+                        if (t.X - 1 < 0)
+                            PackmanProjectiles.Remove(t);
+                        break;
+                    case Direction.Right:
+                        if (t.X + 16 > _fieldWidth)
+                            PackmanProjectiles.Remove(t);
+                        break;
+                    case Direction.Up:
+                        if (t.Y - 1 < 0)
+                            PackmanProjectiles.Remove(t);
+                        break;
+                    case Direction.Down:
+                        if (t.Y + 16 > _fieldHeight)
+                            PackmanProjectiles.Remove(t);
+                        break;
+                }
+                break;
+            }
+
+            //столкновение снаряда со стеной
+            foreach (var a in Walls)
+            {
+                for(int i= 0; i < Projectiles.Count; i++)
+                {
+                    if (Collide.BoxCollides(Projectiles[i].X, Projectiles[i].Y, 10, 10, a.XLeft, a.YUp, a.XRight - a.XLeft, a.YDown - a.YUp))
+                    {
+                        Projectiles.Remove(Projectiles[i]);
+                    }
+                }                
+            }
+
+            foreach (var a in Walls)
+            {
+                for (int i = 0; i < PackmanProjectiles.Count; i++)
+                {
+                    if (Collide.BoxCollides(PackmanProjectiles[i].X, PackmanProjectiles[i].Y, 10, 10, a.XLeft, a.YUp, a.XRight - a.XLeft, a.YDown - a.YUp))
+                    {
+                        PackmanProjectiles.Remove(PackmanProjectiles[i]);
+                    }
+                }
+            }
+
             //движение
-            foreach (var t in tanks)
+            foreach (var t in Tanks)
                 t.Run();   
         }
 
@@ -338,14 +430,14 @@ namespace Tanks
             int _x;
             int _y;
 
-            while (apples.Count < _applesAmount)
+            while (Apples.Count < _applesAmount)
             {
                 _x = random.Next(_fieldWidth - 20);
                 _y = random.Next(_fieldHeight - 20);
 
                 bool flag = false;
 
-                foreach (var a in walls)
+                foreach (var a in Walls)
                 {
                     if (Collide.BoxCollides(_x, _y, 15, 15, a.XLeft, a.YUp, a.XRight - a.XLeft, a.YDown - a.YUp))
                     {
@@ -354,7 +446,7 @@ namespace Tanks
                     }
                 }
 
-                foreach (var a in apples)
+                foreach (var a in Apples)
                 {
                     if (Collide.BoxCollides(_x, _y, 15, 15, a.X, a.Y, 20, 20))
                     {
@@ -365,7 +457,7 @@ namespace Tanks
 
                 if (flag == false)
                 {
-                    apples.Add(new Apple(_x, _y));
+                    Apples.Add(new Apple(_x, _y));
                 }
 
             }
@@ -376,14 +468,14 @@ namespace Tanks
             int _x;
             int _y;
 
-            while (tanks.Count < _tanksAmount)
+            while (Tanks.Count < _tanksAmount)
             {
                 _x = random.Next(_fieldWidth - 20);
-                _y = random.Next(_fieldHeight - 20);
+                _y = random.Next(_fieldHeight - 100);
 
                 bool flag = false;
 
-                foreach (var a in walls)
+                foreach (var a in Walls)
                 {
                     if (Collide.BoxCollides(_x, _y, 20, 20, a.XLeft, a.YUp, a.XRight - a.XLeft, a.YDown - a.YUp))
                     {
@@ -392,7 +484,7 @@ namespace Tanks
                     }
                 }
 
-                foreach (var a in tanks)
+                foreach (var a in Apples)
                 {
                     if (Collide.BoxCollides(_x, _y, 20, 20, a.X, a.Y, 20, 20))
                     {
@@ -401,27 +493,22 @@ namespace Tanks
                     }
                 }
 
-                if (Collide.BoxCollides(_x, _y, 20, 20, kolobok.X, kolobok.Y, 20, 20))
-                {
-                    flag = true;
-                    break;
-                }
-
                 if (flag == false)
                 {
-                    tanks.Add(new Tank(_x, _y));
+                    Tanks.Add(new Tank(_x, _y));
                 }
+
             }
         }
 
         private void CreateWalls()
         {
-            walls.Add(new Wall(140, 185, 50, 65));
-            walls.Add(new Wall(170, 185, 140, 230));
-            walls.Add(new Wall(30, 45, 80, 125));
-            walls.Add(new Wall(100, 115, 5, 65));
-            walls.Add(new Wall(80, 125, 130, 145));
-            walls.Add(new Wall(0, 60, 170, 185));
+            Walls.Add(new Wall(140, 185, 50, 65));
+            Walls.Add(new Wall(170, 185, 140, 230));
+            Walls.Add(new Wall(30, 45, 80, 125));
+            Walls.Add(new Wall(100, 115, 5, 65));
+            Walls.Add(new Wall(80, 125, 130, 145));
+            Walls.Add(new Wall(0, 60, 170, 185));
         }
 
         private void timer_Tick(object sender, EventArgs e)
@@ -431,38 +518,46 @@ namespace Tanks
 
         public void Shoot()
         {
-            switch(kolobok.TankDirection)
+            switch (kolobok.TankDirection)
             {
                 case Direction.Left:
-                    projectiles.Add(new Projectile(kolobok.X - 22, kolobok.Y - 5, kolobok.TankDirection));
+                    PackmanProjectiles.Add(new PackmanProjectile(kolobok.X - 21, kolobok.Y - 5, kolobok.TankDirection));
                     break;
                 case Direction.Right:
-                    projectiles.Add(new Projectile(kolobok.X + 12, kolobok.Y - 5, kolobok.TankDirection));
+                    PackmanProjectiles.Add(new PackmanProjectile(kolobok.X + 11, kolobok.Y - 5, kolobok.TankDirection));
                     break;
                 case Direction.Up:
-                    projectiles.Add(new Projectile(kolobok.X - 5, kolobok.Y - 22, kolobok.TankDirection));
+                    PackmanProjectiles.Add(new PackmanProjectile(kolobok.X - 5, kolobok.Y - 21, kolobok.TankDirection));
                     break;
                 case Direction.Down:
-                    projectiles.Add(new Projectile(kolobok.X - 5, kolobok.Y + 12, kolobok.TankDirection));
+                    PackmanProjectiles.Add(new PackmanProjectile(kolobok.X - 5, kolobok.Y + 11, kolobok.TankDirection));
                     break;
 
             }
         }
 
+        public void GameOver()
+        {
+            timer.Stop();
+            timer.Tick -= new EventHandler(timer_Tick);
+            Dispose();
+            GameCount = 0;
+            kolobok.SetBeginValue();
+            Tanks = new List<Tank>();
+            PackmanProjectiles = new List<PackmanProjectile>();
+            Apples = new List<Apple>();
+            Tanks = Tanks;
+            Projectiles = new List<Projectile>();
+            GameStatus = false;
+            CreateApples();
+            CreateTanks();          
+        }
 
         public void Dispose()
         {
-            kolobok = null;
-            wallView = null;
-            apples = null;
-            tanks = null;
-            walls = null;
-            projectiles = null;
-            random = null;
-            Walls = null;
-            Apples = null;
             Tanks = null;
             Projectiles = null;
+            PackmanProjectiles = null;
         }
     }
 }

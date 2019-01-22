@@ -9,15 +9,12 @@ namespace Tanks
 {
     public class Apple : IGameObject
     {
-        AppleView appleView = new AppleView();
         public int X { get; }
         public int Y { get; }
-        public Image Image { get; }
         public Apple(int x, int y)
         {
             X = x;
             Y = y;
-            Image = appleView.Img;
         }
     }
 }

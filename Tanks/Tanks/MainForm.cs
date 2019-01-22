@@ -12,14 +12,24 @@ namespace Tanks
 {
     public partial class MainForm : Form
     {
-        Model model;
-        PackmanController packmanController;
-
-        int timerCounter = 0; //счётчик для таймера
-        System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+        private Model model;
+        private PackmanController packmanController;
+       
+        private System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
 
         private Image MyImage;
+        private int _fieldWidth;
+        private int _fieldHeight;
+        private int _tanksAmount;
+        private int _applesAmount;
         private int _objectsSpeed;
+
+        private AppleView appleView = new AppleView();
+        private KolobokView kolobokView = new KolobokView();
+        private ProjectileView projectileView = new ProjectileView();
+        private TankView tankView = new TankView();
+        private WallView wallView = new WallView();
+        private Graphics g;
 
         public MainForm() : this(250) { }
         public MainForm(int fieldWidth) : this(fieldWidth, 250) { }
@@ -29,26 +39,72 @@ namespace Tanks
         public MainForm(int fieldWidth, int fieldHeight, int tanksAmount, int applesAmount, int objectsSpeed)
         {
             InitializeComponent();
-            model = new Model(fieldWidth, fieldHeight, tanksAmount, applesAmount, objectsSpeed);
-            pictureBox1.Size = new Size(fieldWidth, fieldHeight);
+            
+            if ((fieldWidth >= 250) && (fieldWidth <= 770))
+            {
+                _fieldWidth = fieldWidth;
+            }
+            else
+            {
+                _fieldWidth = 250;
+            }
+
+            if ((fieldHeight >= 250) && (fieldHeight <= 300))
+            {
+                _fieldHeight = fieldHeight;
+            }
+            else
+            {
+                _fieldHeight = 250;
+            }
+
+            if ((tanksAmount >= 10) && (tanksAmount <= 1))
+            {
+                _tanksAmount = tanksAmount;
+            }
+            else
+            {
+                _tanksAmount = 5;
+            }
+
+            if ((applesAmount >= 10) && (applesAmount <= 1))
+            {
+                _applesAmount = applesAmount;
+            }
+            else
+            {
+                _applesAmount = 5;
+            }
+
+            if ((objectsSpeed >= 10) && (objectsSpeed <= 1))
+            {
+                _objectsSpeed = objectsSpeed;
+            }
+            else
+            {
+                _objectsSpeed = 10;
+            }
+
+            model = new Model(_fieldWidth, _fieldHeight, _tanksAmount, _applesAmount, _objectsSpeed);
+            pictureBox1.Size = new Size(_fieldWidth, _fieldHeight);
             packmanController = new PackmanController(model);
-            _objectsSpeed = objectsSpeed;
+            timer.Interval = _objectsSpeed;
+            timer.Tick += new EventHandler(Timer_Tick);
+            g = pictureBox1.CreateGraphics();
         }
 
         
 
         private void NewGameBtn_Click(object sender, EventArgs e)
         {
-            timer.Interval = _objectsSpeed;
-            timer.Tick += new EventHandler(Timer_Tick); 
+            timer.Stop();
+            packmanController.GameOver();
+            Play();
             timer.Start();
-
-            packmanController.NewGame();
         }
 
         private void ShowMyImage(Image image, int xSize, int ySize)
         {
-            Graphics g = pictureBox1.CreateGraphics();
             g.DrawImage(image, new Point(xSize, ySize));
         }
 
@@ -58,8 +114,7 @@ namespace Tanks
             for(int i = xLeft; i < xRight; i += 15)
                 for(int j = yUp; j < yDown; j += 15)
                 {
-                    Graphics g = pictureBox1.CreateGraphics();
-                    g.DrawImage(model.wallView.Img, new Point(i, j));
+                    g.DrawImage(wallView.Img, new Point(i, j));
                 }
         }
 
@@ -70,20 +125,13 @@ namespace Tanks
             {
                 DrawWall(w.XLeft, w.XRight, w.YUp, w.YDown);
             }
-            DrawWall(140, 185, 50, 65);
-            DrawWall(170, 185, 140, 230);
-            DrawWall(30, 45, 80, 125);
-            DrawWall(100, 115, 5, 65);
-            DrawWall(80, 125, 130, 145);
-            DrawWall(0, 60, 170, 185);
         }
 
         private void DrawAllApples()
         {
             foreach(var element in model.Apples)
             {
-                Graphics g = pictureBox1.CreateGraphics();
-                g.DrawImage(element.Image, new Point(element.X, element.Y));
+                g.DrawImage(appleView.Img, new Point(element.X, element.Y));
             }
         }
 
@@ -91,7 +139,6 @@ namespace Tanks
         {
             foreach (var t in model.Tanks)
             {
-                Graphics g = pictureBox1.CreateGraphics();
                 g.DrawImage(t.TankImage, new Point(t.X, t.Y));
             }
         }
@@ -99,13 +146,16 @@ namespace Tanks
         private void DrawAllProjectiles()
         {
             foreach (var element in model.Projectiles)
+            {               
+                g.DrawImage(projectileView.ProjectileImg, new Point(element.X + 10, element.Y + 10));
+            }
+            foreach (var element in model.PackmanProjectiles)
             {
-                Graphics g = pictureBox1.CreateGraphics();
                 g.DrawImage(element.ProjectileImage, new Point(element.X + 10, element.Y + 10));
             }
         }
 
-        private void NewGameBtn_KeyPress(object sender, KeyPressEventArgs e)
+        private void Btn_KeyPress(object sender, KeyPressEventArgs e)
         {
             packmanController.ChangeDirection(e); 
         }
@@ -122,7 +172,6 @@ namespace Tanks
             DrawAllApples();
             DrawAllTanks();
             DrawAllProjectiles();
-            //Invalidate();
         }
 
         private void PaintAll()
@@ -132,22 +181,34 @@ namespace Tanks
             DrawAllApples();
             DrawAllTanks();
             DrawAllProjectiles();
-            //Invalidate();
         }
 
         private void Timer_Tick(object sender, EventArgs e)
         {
+            if (model.GameStatus == false)
+                timer.Stop();
             PaintAll();
             pictureBox1.Refresh();
+            textBox1.Text = model.GameCount.ToString();
         }
 
         private void ShowReport_Click(object sender, EventArgs e)
         {
-            ReportForm reportForm = new ReportForm(model);
-            reportForm.Hide();
-            reportForm.Show();
+            if(ReportFormStatus.status)
+            {
+                ReportForm reportForm = new ReportForm(model);
+                reportForm.Hide();
+                reportForm.Show();
+                ReportFormStatus.status = false;
+            }           
         }
 
-        
+        private void Play()
+        {
+            packmanController.NewGame();
+            PaintAll();
+            pictureBox1.Refresh();
+            textBox1.Text = model.GameCount.ToString();
+        }
     }
 }

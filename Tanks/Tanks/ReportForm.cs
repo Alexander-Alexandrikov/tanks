@@ -13,8 +13,6 @@ namespace Tanks
     public partial class ReportForm : Form
     {
         Model _model;
-
-        int timerCounter = 0; //счётчик для таймера
         System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
 
         public ReportForm(Model model)
@@ -22,8 +20,8 @@ namespace Tanks
             InitializeComponent();
             _model = model;
             LoadData();
-            timer.Interval = 1;
-            timer.Tick += new EventHandler(Timer_Tick); //подписываемся на события Tick
+            timer.Interval = 1000;
+            timer.Tick += new EventHandler(Timer_Tick); 
             timer.Start();
         }
 
@@ -32,12 +30,25 @@ namespace Tanks
             dataGridView1.Rows.Clear();
             
             List<string[]> dataList = new List<string[]>();
+
+            dataList.Add(new string[3] { "Пакмен", _model.kolobok.X.ToString(), _model.kolobok.Y.ToString() });
+
             foreach (var el in _model.Tanks)
             {
                 dataList.Add(new string[3] { "Танк", el.X.ToString(), el.Y.ToString() });
             }
 
-            foreach(var e in dataList)
+            foreach (var el in _model.Apples)
+            {
+                dataList.Add(new string[3] { "Яблоко", el.X.ToString(), el.Y.ToString() });
+            }
+
+            foreach (var el in _model.Walls)
+            {
+                dataList.Add(new string[3] { "Стена", el.XLeft.ToString(), el.YUp.ToString() });
+            }
+
+            foreach (var e in dataList)
             {
                 dataGridView1.Rows.Add(e);
             }
@@ -53,6 +64,7 @@ namespace Tanks
         {
             timer.Tick -= new EventHandler(Timer_Tick);
             timer.Dispose();
+            ReportFormStatus.status = true;
         }
     }
 }
