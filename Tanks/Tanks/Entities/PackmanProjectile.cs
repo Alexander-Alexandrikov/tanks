@@ -9,15 +9,12 @@ namespace Tanks
 {
     public class PackmanProjectile
     {
-        ProjectileView projectileView = new ProjectileView();
-        public Image ProjectileImage { get; }
         public int X { get; private set; }
         public int Y { get; private set; }
         public Direction _direction;
 
         public PackmanProjectile(int x, int y, Direction direction)
         {
-            ProjectileImage = projectileView.ProjectileImg;
             _direction = direction;
             switch (_direction)
             {

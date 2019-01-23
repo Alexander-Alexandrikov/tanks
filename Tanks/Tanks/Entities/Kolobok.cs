@@ -9,19 +9,17 @@ namespace Tanks
 {
     public class Kolobok : ITank, IGameObject, IRun
     {
-        KolobokView kolobokView = new KolobokView();
-        
         public int X { get; private set; }
         public int Y { get; private set; }
+        public Point Point { get; }
         public Direction TankDirection { get; private set; }
-        public Image TankImage { get; private set; }
 
         public Kolobok()
         {
             TankDirection = Direction.Up;
             X = 110;
             Y = 200;
-            TankImage = kolobokView.ImgUp;
+            Point = new Point(X, Y);
         }
 
         public void SetBeginValue()
@@ -29,7 +27,6 @@ namespace Tanks
             TankDirection = Direction.Up;
             X = 110;
             Y = 200;
-            TankImage = kolobokView.ImgUp;
         }
 
         public void SetDirection(Direction newDirection)
@@ -54,19 +51,15 @@ namespace Tanks
             {
                 case Direction.Left:
                     X--;
-                    TankImage = kolobokView.ImgLeft;
                     break;
                 case Direction.Right:
                     X++;
-                    TankImage = kolobokView.ImgRight;
                     break;
                 case Direction.Up:
                     Y--;
-                    TankImage = kolobokView.ImgUp;
                     break;
                 case Direction.Down:
                     Y++;
-                    TankImage = kolobokView.ImgDown;
                     break;
             }
         }

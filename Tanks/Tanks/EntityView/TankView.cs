@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace Tanks
 {
-    public class TankView 
+    public class TankView : ITankView
     {
         public Image ImgUp { get; } = Properties.Resources.EnemyTank;
         public Image ImgRight { get; } = Properties.Resources.EnemyTankRight;

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Tanks
 {
-    public static class Collide
+    public static class AllCollision
     {
         public static bool Collides(int x, int y, int r, int b, int x2, int y2, int r2, int b2)
         {

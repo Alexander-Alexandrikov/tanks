@@ -9,7 +9,6 @@ namespace Tanks
 {
     public interface ITank
     {
-        Image TankImage { get; }
         Direction TankDirection { get; }       
     }
 }

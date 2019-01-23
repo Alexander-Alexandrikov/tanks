@@ -9,19 +9,15 @@ namespace Tanks
 {
     public class Tank : ITank, IGameObject, IRun
     {
-        private TankView tankView = new TankView();
         public int X { get; private set; }
         public int Y { get; private set; }
         public Direction TankDirection { get; private set; }
-
-        public Image TankImage { get; private set; }
 
         public Tank(int x, int y)
         {
             TankDirection = Direction.Up;
             X = x;
             Y = y;
-            TankImage = tankView.ImgUp;
         }
 
         public void Run()
@@ -83,16 +79,12 @@ namespace Tanks
             switch (TankDirection)
             {
                 case Direction.Left:
-                    TankImage = tankView.ImgLeft;
                     break;
                 case Direction.Right:
-                    TankImage = tankView.ImgRight;
                     break;
                 case Direction.Up:
-                    TankImage = tankView.ImgUp;
                     break;
                 case Direction.Down:
-                    TankImage = tankView.ImgDown;
                     break;
                 default:
                     break;

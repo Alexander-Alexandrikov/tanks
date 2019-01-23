@@ -7,8 +7,11 @@ using System.Threading.Tasks;
 
 namespace Tanks
 {
-    public class BulletView 
+    public interface ITankView
     {
-        public Image Img { get; } = Properties.Resources.bullet;
+        Image ImgUp { get; } 
+        Image ImgRight { get; } 
+        Image ImgLeft { get; } 
+        Image ImgDown { get; } 
     }
 }

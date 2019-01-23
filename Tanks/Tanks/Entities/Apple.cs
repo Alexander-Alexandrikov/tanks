@@ -11,10 +11,13 @@ namespace Tanks
     {
         public int X { get; }
         public int Y { get; }
+        public Point Point { get; }
+
         public Apple(int x, int y)
         {
             X = x;
             Y = y;
+            Point = new Point(X, Y);
         }
     }
 }
