@@ -118,7 +118,7 @@ namespace Tanks
             {
                 if (random.Next(100) < 1)
                 {
-                    switch (kolobok.TankDirection)
+                    switch (t.TankDirection)
                     {
                         case Direction.Left:
                             Projectiles.Add(new Projectile(t.X - 22, t.Y - 5, t.TankDirection));

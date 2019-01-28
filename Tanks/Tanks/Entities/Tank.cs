@@ -44,7 +44,6 @@ namespace Tanks
         public void Turn(Direction direction)
         {
             TankDirection = direction;
-            PutImage();
         }
 
 
@@ -54,41 +53,20 @@ namespace Tanks
             {
                 case Direction.Left:
                     TankDirection = Direction.Right;
-                    PutImage();
                     break;
                 case Direction.Right:
                     TankDirection = Direction.Left;
-                    PutImage();
                     break;
                 case Direction.Up:
                     TankDirection = Direction.Down;
-                    PutImage();
                     break;
                 case Direction.Down:
                     TankDirection = Direction.Up;
-                    PutImage();
                     break;
                 default:
                     break;
             }
 
-        }
-
-        private void PutImage()
-        {
-            switch (TankDirection)
-            {
-                case Direction.Left:
-                    break;
-                case Direction.Right:
-                    break;
-                case Direction.Up:
-                    break;
-                case Direction.Down:
-                    break;
-                default:
-                    break;
-            }
         }
     }
 }
